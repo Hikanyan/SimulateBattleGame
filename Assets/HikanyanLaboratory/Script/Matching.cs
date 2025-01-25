@@ -53,21 +53,22 @@ namespace HikanyanLaboratory.Script
         public void SimulateBattle()
         {
             int turn = 1;
-            for (; turn <= 5; turn++)
+            while (DetermineWinner())
             {
                 CachePreviousState(); // 現在の状態をキャッシュ
-                
+
                 var pairs = MatchPairs();
                 foreach (var pair in pairs)
                 {
                     ResolveAttack(pair.attacker, pair.defender);
                 }
 
-                SortBySpeed();
+                SortBySpeed(); // ターンごとに速度順に並び替え
                 DisplayLog(turn); // ターン終了ログ
                 string log = string.Join("\n", _logList);
                 Debug.Log(log);
                 _logList.Clear();
+                turn++;
             }
         }
 
@@ -96,7 +97,7 @@ namespace HikanyanLaboratory.Script
                 string spdChange = $"{character._spd,3} → {character._spd,3}";
 
                 string status = string.Format(
-                    "{0,-10} HP = {1}   ATK = {2}   DEF = {3}   SPD = {4}",
+                    "{0,-10} HP = {1} ATK = {2} DEF = {3} SPD = {4}",
                     character._name,
                     hpChange,
                     atkChange,
@@ -113,7 +114,7 @@ namespace HikanyanLaboratory.Script
             var pairs = new List<(StatusData attacker, StatusData defender)>();
             var matched = new HashSet<StatusData>();
 
-            foreach (var character in AllCharacters)
+            foreach (var character in AllCharacters.ToList())// Listをコピーしてループ内の要素を変更を防ぐ
             {
                 if (matched.Contains(character)) continue;
 
@@ -139,6 +140,10 @@ namespace HikanyanLaboratory.Script
                     matched.Add(character);
                     matched.Add(target);
                 }
+                else
+                {
+                    Debug.Log($"{character._name} has no target.");
+                }
             }
 
             return pairs;
@@ -149,18 +154,58 @@ namespace HikanyanLaboratory.Script
             float baseDamage = Mathf.Max(1, attacker._atk - defender._def);
             defender._hp -= (int)baseDamage;
             defender._hp = Mathf.Max(0, defender._hp); // HPは0未満にならない
-            Debug.Log(
+            if (defender._hp == 0)
+            {
+                if (TeamA.Contains(defender))
+                {
+                    TeamA.Remove(defender);
+                }
+                else if (TeamB.Contains(defender))
+                {
+                    TeamB.Remove(defender);
+                }
+                AllCharacters.Remove(defender);
+            }
+
+            _logList.Add(
                 $"<color=cyan>{attacker._name}</color> attacks <color=yellow>{defender._name}</color> for <color=red>{(int)baseDamage}</color> damage. <color=yellow>{defender._name}</color> has <color=green>{defender._hp}</color> HP remaining.");
         }
-        
+
+
+        // private int EvaluateMatchPriority(StatusData attacker, StatusData defender)
+        // {
+        //     int atkWeight = 4;
+        //     int spdWeight = 3;
+        //     int hpWeight = -2;
+        //     int defWeight = -1;
+        //
+        //     int score = (defender._atk * atkWeight) +
+        //                 (defender._spd * spdWeight) +
+        //                 (defender._hp * hpWeight) +
+        //                 (defender._def * defWeight);
+        //     _logList.Add( $"{defender._atk} * {atkWeight} + {defender._spd} * {spdWeight} + {defender._hp} * {hpWeight} + {defender._def} * {defWeight} = {score}");
+        //     return score;
+        // }
         private int EvaluateMatchPriority(StatusData attacker, StatusData defender)
         {
-            // 評価基準: 攻撃力、速度、残りHPの重み付き評価
+            int maxAtk = Math.Max(1, AllCharacters.Max(c => c._atk));
+            int maxSpd = Math.Max(1, AllCharacters.Max(c => c._spd));
+            int maxHp = Math.Max(1, AllCharacters.Max(c => c._hp));
+
+            float normalizedAtk = (float)defender._atk / maxAtk;
+            float normalizedSpd = (float)defender._spd / maxSpd;
+            float normalizedHp = (float)defender._hp / maxHp;
+
             int atkWeight = 3;
             int spdWeight = 2;
-            int hpWeight = 1;
+            int hpWeight = -1;
 
-            return (defender._atk * atkWeight) + (defender._spd * spdWeight) - (defender._hp * hpWeight);
+            int score = (int)((normalizedAtk * atkWeight * 1000) +
+                              (normalizedSpd * spdWeight * 1000) +
+                              (normalizedHp * hpWeight * 1000));
+            _logList.Add(
+                $"Attacker : {attacker._name} vs Defender : {defender._name} : {normalizedAtk} * {atkWeight} + {normalizedSpd} * {spdWeight} + {normalizedHp} * {hpWeight} = {score}");
+            return score;
         }
 
 
@@ -168,17 +213,36 @@ namespace HikanyanLaboratory.Script
         {
             AllCharacters.Sort((a, b) => b._spd - a._spd);
         }
+
+        private bool DetermineWinner()
+        {
+            if (TeamA.Count == 0)
+            {
+                Debug.Log("Team B wins!");
+                return false;
+            }
+
+            if (TeamB.Count == 0)
+            {
+                Debug.Log("Team A wins!");
+                return false;
+            }
+
+            return true;
+        }
     }
 
     public class StatusData
     {
         public string _name;
+        public int _level;
+        public int _exp;
         public int _hp;
         public int _previousHp;
         public int _atk;
         public int _def;
         public int _spd;
-        
-        
+        public int _luck;
+        public int _coin;
     }
 }

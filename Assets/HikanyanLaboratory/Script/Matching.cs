@@ -13,9 +13,10 @@ namespace HikanyanLaboratory.Script
         public List<StatusData> TeamB = new List<StatusData>();
         public List<StatusData> AllCharacters = new List<StatusData>();
         private List<string> _logList = new List<string>();
-
+        private int _seed = 1234;
         private void Start()
         {
+            UnityEngine.Random.InitState(_seed);
             Initialize();
             SimulateBattle();
         }
@@ -114,7 +115,7 @@ namespace HikanyanLaboratory.Script
             var pairs = new List<(StatusData attacker, StatusData defender)>();
             var matched = new HashSet<StatusData>();
 
-            foreach (var character in AllCharacters.ToList())// Listをコピーしてループ内の要素を変更を防ぐ
+            foreach (var character in AllCharacters.ToList()) // Listをコピーしてループ内の要素を変更を防ぐ
             {
                 if (matched.Contains(character)) continue;
 
@@ -142,7 +143,7 @@ namespace HikanyanLaboratory.Script
                 }
                 else
                 {
-                    Debug.Log($"{character._name} has no target.");
+                    _logList.Add($"{character._name} has no target.");
                 }
             }
 
@@ -164,7 +165,6 @@ namespace HikanyanLaboratory.Script
                 {
                     TeamB.Remove(defender);
                 }
-                AllCharacters.Remove(defender);
             }
 
             _logList.Add(

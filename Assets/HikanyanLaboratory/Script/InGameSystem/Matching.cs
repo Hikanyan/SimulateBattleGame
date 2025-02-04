@@ -30,9 +30,9 @@ namespace HikanyanLaboratory.Script
                     _name = $"TeamA_{i + 1}",
                     _hp = 100,
                     _previousHp = 100,
-                    _atk = UnityEngine.Random.Range(10, 20),
+                    _atk = UnityEngine.Random.Range(10, 50),
                     _def = UnityEngine.Random.Range(5, 15),
-                    _spd = UnityEngine.Random.Range(10, 30)
+                    _spd = UnityEngine.Random.Range(10, 50)
                 });
 
                 TeamB.Add(new StatusData

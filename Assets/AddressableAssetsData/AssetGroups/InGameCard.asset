@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: InGameCard
+  m_EditorClassIdentifier: 
+  m_GroupName: InGameCard
+  m_GUID: 4f56969b518544e829515749b93ca6df
+  m_SerializeEntries:
+  - m_GUID: 047069034e49541cd8ef911c2c6d82ed
+    m_Address: Assets/HikanyanLaboratory/UI/onepiece02_zoro_bandana.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1427ddde58b1e46eca12f2b7c86169f7
+    m_Address: Assets/HikanyanLaboratory/UI/onepiece01_luffy.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5543f7f9b48b3437c9c8f6adc4deb072
+    m_Address: Assets/HikanyanLaboratory/UI/onepiece02_zoro.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d886b114c60964f088586e0b1c7cd0f0
+    m_Address: Assets/HikanyanLaboratory/UI/onepiece01_luffy2.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: c13fbf782bc384bc4978a3c60aa783c5, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 9fb3989dcc3dd48e09d6745fd0d3a802, type: 2}
+    - {fileID: 11400000, guid: 0db26df261b944ed586fc9d10b9331a7, type: 2}
